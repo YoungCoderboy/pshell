@@ -40,6 +40,7 @@ const COMMANDS = [
   "linkedin",
   "email",
   "clear",
+  "ipconfig",
 ];
 
 const SUDO_PASSWORD = command.password;
@@ -218,8 +219,17 @@ function commandHandler(input: string) {
     }
     return;
   }
-
+  function check() {
+    var ipp = localStorage.getItem("ip");
+    if (!ipp) {
+      return "Not Found";
+    }
+    return ipp;
+  }
   switch (input) {
+    case "ipconfig":
+      writeLines([check(), "<br>"]);
+      break;
     case "clear":
       setTimeout(() => {
         if (!TERMINAL || !WRITELINESCOPY) return;
