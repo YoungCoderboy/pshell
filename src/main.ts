@@ -4,6 +4,9 @@ import { BANNER } from "./commands/banner";
 import { ABOUT } from "./commands/about";
 import { DEFAULT } from "./commands/default";
 import { PROJECTS } from "./commands/projects";
+
+import { PROBLEM } from "./commands/problem";
+
 import { createWhoami } from "./commands/whoami";
 
 //mutWriteLines gets deleted and reassigned
@@ -26,6 +29,7 @@ const PASSWORD_INPUT = document.getElementById(
 ) as HTMLInputElement;
 const PRE_HOST = document.getElementById("pre-host");
 const PRE_USER = document.getElementById("pre-user");
+
 const HOST = document.getElementById("host");
 const USER = document.getElementById("user");
 const PROMPT = document.getElementById("prompt");
@@ -33,6 +37,7 @@ const COMMANDS = [
   "help",
   "about",
   "projects",
+  "problems",
   "whoami",
   "repo",
   "banner",
@@ -182,7 +187,7 @@ function arrowKeys(e: string) {
 function commandHandler(input: string) {
   if (input.startsWith("rm -rf") && input.trim() !== "rm -rf") {
     if (isSudo) {
-      if (input === "rm -rf src" && !bareMode) {
+      if (input === "rm -rf system" && !bareMode) {
         bareMode = true;
 
         setTimeout(() => {
@@ -217,6 +222,52 @@ function commandHandler(input: string) {
     } else {
       writeLines(["Permission not granted.", "<br>"]);
     }
+    return;
+  }
+  if (input.startsWith("cat") && input.trim() !== "cat") {
+    const listOfFiles = input.trim().split(" ", 3);
+    const fileName = listOfFiles[1];
+    switch (fileName) {
+      case "projects":
+        if (bareMode) {
+          writeLines(["I don't want you to break the other projects.", "<br>"]);
+          break;
+        }
+        writeLines(PROJECTS);
+        break;
+      case "problems":
+        if (bareMode) {
+          writeLines(["I don't want you to break the other projects.", "<br>"]);
+          break;
+        }
+        writeLines(PROBLEM);
+        break;
+      case "about":
+        if (bareMode) {
+          writeLines(["Nothing to see here.", "<br>"]);
+          break;
+        }
+        writeLines(ABOUT);
+        break;
+      case "contact":
+        if (bareMode) {
+          writeLines(["what is are suppose to do", "<br>"]);
+          break;
+        }
+        let newArray = [];
+        newArray.push("<code>");
+        ABOUT.forEach((item) => {
+          newArray.push(item);
+        });
+        newArray.push("</code>");
+
+        writeLines(newArray);
+
+        break;
+      default:
+        writeLines(["File not found.", "<br>"]);
+    }
+
     return;
   }
   function check() {
@@ -272,6 +323,13 @@ function commandHandler(input: string) {
         break;
       }
       writeLines(PROJECTS);
+      break;
+    case "problems":
+      if (bareMode) {
+        writeLines(["I don't want you to break the other projects.", "<br>"]);
+        break;
+      }
+      writeLines(PROBLEM);
       break;
     case "repo":
       writeLines(["Redirecting to github.com...", "<br>"]);
@@ -336,11 +394,33 @@ function commandHandler(input: string) {
       }
 
       if (isSudo) {
-        writeLines(["src", "<br>"]);
+        writeLines(["system", "<br>"]);
       } else {
-        writeLines(["Permission not granted.", "<br>"]);
+        writeLines([
+          "<pre>system   bin   projects.deb   problems.deb   about.deb</pre>",
+          "<br>",
+        ]);
+        writeLines([
+          "try: <span class='command'>'cat &lt;file&gt; without file Extension'</span>",
+          "<br>",
+        ]);
       }
       break;
+    case "cat":
+      if (bareMode) {
+        writeLines(["", "<br>"]);
+        break;
+      }
+      writeLines([
+        "Usage: <span class='command'>'cat &lt;file&gt;'</span>",
+        "<br>",
+      ]);
+      writeLines([
+        "type <span class='command'>'ls'</span> for a list of directories.",
+        "<br>",
+      ]);
+      break;
+
     default:
       if (bareMode) {
         writeLines(["type 'help'", "<br>"]);
