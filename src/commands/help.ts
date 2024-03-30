@@ -2,6 +2,7 @@ const helpObj = {
   commands: [
     ["'about'", "Who made this website?"],
     ["'projects'", "Maybe there's something interesting."],
+    ["'problems'", "wizard of problem solving? 🥹"],
     ["'whoami'", "A perplexing question."],
     ["'sudo'", "???"],
     ["'repo'", "View the Github Repository."],
