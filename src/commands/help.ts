@@ -12,6 +12,7 @@ const helpObj = {
     ["'linkedin'", "Connect with me."],
     ["'github'", "Check my other projects."],
     ["'ipconfig'", "I can see you 😂"],
+    ["'send message'", "🫣"],
   ],
 };
 
