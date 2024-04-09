@@ -17,7 +17,7 @@ let isSudo = false;
 let isPasswordInput = false;
 let passwordCounter = 0;
 let bareMode = false;
-
+let currentDirectory = "root";
 //WRITELINESCOPY is used to during the "clear" command
 const WRITELINESCOPY = mutWriteLines;
 const TERMINAL = document.getElementById("terminal");
@@ -46,6 +46,7 @@ const COMMANDS = [
   "email",
   "clear",
   "ipconfig",
+  "send message",
 ];
 
 const SUDO_PASSWORD = command.password;
@@ -270,6 +271,7 @@ function commandHandler(input: string) {
 
     return;
   }
+
   function check() {
     var ipp = localStorage.getItem("ip");
     if (!ipp) {
@@ -288,6 +290,12 @@ function commandHandler(input: string) {
         TERMINAL.appendChild(WRITELINESCOPY);
         mutWriteLines = WRITELINESCOPY;
       });
+      break;
+    case "send message":
+      writeLines([
+        "Usage: <span class='command'>'send message -m &lt;message&gt; -e &lt;email&gt;'</span>",
+        "<br>",
+      ]);
       break;
     case "banner":
       if (bareMode) {
@@ -332,13 +340,13 @@ function commandHandler(input: string) {
       writeLines(PROBLEM);
       break;
     case "repo":
-      writeLines(["Redirecting to github.com...", "<br>"]);
+      writeLines(["Redirecting to github.com repo", "<br>"]);
       setTimeout(() => {
         window.open(REPO_LINK, "_blank");
       }, 500);
       break;
     case "linkedin":
-      writeLines(["Redirecting to github.com...", "<br>"]);
+      writeLines(["Redirecting to linkedin.com...", "<br>"]);
       setTimeout(() => {
         window.open(command.social.linkedin, "_blank");
       }, 500);
@@ -405,6 +413,14 @@ function commandHandler(input: string) {
           "<br>",
         ]);
       }
+      break;
+    case "pwd":
+      if (bareMode) {
+        writeLines(["", "<br>"]);
+        break;
+      }
+
+      writeLines([`${currentDirectory}`, "<br>"]);
       break;
     case "cat":
       if (bareMode) {
@@ -548,7 +564,9 @@ const initEventListeners = () => {
   window.addEventListener("click", () => {
     USERINPUT.focus();
   });
-
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
   console.log(
     `%cPassword: ${command.password}`,
     "color: red; font-size: 20px;"
